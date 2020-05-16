@@ -75,11 +75,12 @@ struct LocalMapImpl
     max_edge_id_(1)
   {
     // g2o setup
+    std::unique_ptr<BlockSolver::LinearSolverType> linearSolver = g2o::make_unique<LinearSolver>();
+    std::unique_ptr <BlockSolver> block_solver ( new BlockSolver( std::move(linearSolver)) );
+ 
     graph_.setAlgorithm(
         new g2o::OptimizationAlgorithmLevenberg(
-            new BlockSolver(
-                new LinearSolver()
-            )
+            std::move(block_solver)
         )
     );
     graph_.setVerbose(false);

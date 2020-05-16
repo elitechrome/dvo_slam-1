@@ -135,11 +135,14 @@ public:
     validator_pool_(boost::bind(&KeyframeGraphImpl::createConstraintProposalValidator, this))
   {
     // g2o setup
+    std::unique_ptr<BlockSolver::LinearSolverType> linearSolver = g2o::make_unique<LinearSolver>();
+    std::unique_ptr <BlockSolver> block_solver ( new BlockSolver( std::move(linearSolver)) );
+
     keyframegraph_.setAlgorithm(
-        new g2o::OptimizationAlgorithmDogleg(
-            new BlockSolver(
-                new LinearSolver()
-    )));
+        new g2o::OptimizationAlgorithmLevenberg(
+            std::move(block_solver)
+        )
+    );
     keyframegraph_.setVerbose(false);
 
     configure(cfg_);

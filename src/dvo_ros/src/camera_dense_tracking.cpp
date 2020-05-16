@@ -58,9 +58,9 @@ CameraDenseTracker::CameraDenseTracker(ros::NodeHandle& nh, ros::NodeHandle& nh_
   ReconfigureServer::CallbackType reconfigure_server_callback = boost::bind(&CameraDenseTracker::handleConfig, this, _1, _2);
   reconfigure_server_.setCallback(reconfigure_server_callback);
 
-  dvo_ros::util::tryGetTransform(from_baselink_to_asus, tl, "base_link", "asus");
+  dvo_ros::util::tryGetTransform(from_baselink_to_asus, tl, "base_link", "camera_base");
 
-  ROS_INFO_STREAM("transformation: base_link -> asus" << std::endl << from_baselink_to_asus.matrix());
+  ROS_INFO_STREAM("transformation: base_link -> camera_base" << std::endl << from_baselink_to_asus.matrix());
 
   pose_sub_ = nh.subscribe<geometry_msgs::PoseWithCovarianceStamped>("pelican/pose", 1, &CameraDenseTracker::handlePose, this);
 
